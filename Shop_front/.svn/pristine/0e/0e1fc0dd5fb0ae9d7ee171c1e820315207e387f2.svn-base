@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shopfront.dao.personage.MessagerMapper">
+	<!-- 页面加载绑定值 -->
+	<select id="list" resultType="Member">
+		select * from tb_member where MemberID =#{id}
+	</select>
+	<!-- 修改个人信息 -->
+	<update id="upd">
+		update tb_member set Sex=#{Sex},username=#{username},TrueName=#{TrueName}
+		<if test="userLocPath!=null">
+			,userLocPath=#{userLocPath}
+		</if>
+		,Emails=#{Emails} where MemberID =#{MemberID};
+	</update>
+	<!-- 验证用户名是否重复 -->
+	<select id="repetition" resultType="int">
+		select count(MemberID) from tb_member where username =#{username}
+	</select>
+</mapper>

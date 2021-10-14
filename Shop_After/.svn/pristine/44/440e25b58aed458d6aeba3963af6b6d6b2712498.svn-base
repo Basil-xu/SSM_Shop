@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shopAfter.dao.Indent.IndentMapper">
+
+<resultMap type="Orderinfo" id="map1">
+		<result column="GoodsName" property="GoodsName"/>
+		<result column="ImageUrl" property="ImageUrl"/>
+		<result column="ShipWay" property="ShipWay"/>
+		<result column="ShipFee" property="ShipFee"/>
+	</resultMap>
+	<select id="list" resultMap="map1" >
+		select a.*,b.GoodsName as GoodsName,c.ImageUrl as ImageUrl,d.ShipWay as ShipWay ,d.ShipFee as ShipFee  from tb_orderinfo  a INNER JOIN tb_goodsinfo b on a.GoodsID = b.GoodsID 
+		inner JOIN tb_image c on b.ImageID = c.ImageID INNER JOIN tb_commodity  d on a.ShipID = d.ShipID where ReceiverName like #{ReceiverName} limit #{index},3
+	</select>
+<!-- 查询总数量  -->
+	<select id="pagecount" resultType="int">
+		select count(a.OrderID) from tb_orderinfo a INNER JOIN tb_goodsinfo b on a.GoodsID = b.GoodsID 
+		inner JOIN tb_image c on b.ImageID = c.ImageID INNER JOIN tb_commodity  d on a.ShipID = d.ShipID where ReceiverName like #{ReceiverName} 
+	</select>
+<!-- 查询 -->
+<select id ="select" resultType="Commodity">
+	select a.ShipID,a. ShipWay from tb_commodity a
+</select>
+	<!-- 删除 -->
+<delete id="del" >
+    delete from tb_orderinfo where OrderID=#{OrderID}
+</delete>
+
+
+<delete id="dels" >
+    delete from  tb_orderinfo where OrderID in 
+    <foreach collection="list" open="(" close=")" item="i" separator=",">
+		${i} 
+    </foreach>
+</delete>
+<!-- 修改 -->
+<update id="update1">
+	update tb_orderinfo
+			<trim prefix="set" prefixOverrides=",">
+				<if test="ShipID!= '' and ShipID!=null">
+					 ShipID=#{ShipID}
+		     	</if>
+		     	<if test="ReceiverName!='' and ReceiverName!=null">
+		     		,ReceiverName=#{ReceiverName}
+		     	</if>
+		     	<if test="ReceiverPhone!='' and ReceiverPhone!=null">
+		     		,ReceiverPhone=#{ReceiverPhone}
+		     	</if>
+		    	<if test="ReceiverAddress!='' and ReceiverAddress!=null">
+		     		,ReceiverAddress=#{ReceiverAddress}
+		     	</if>
+			</trim>
+	 where OrderID=#{OrderID}
+</update>
+</mapper>

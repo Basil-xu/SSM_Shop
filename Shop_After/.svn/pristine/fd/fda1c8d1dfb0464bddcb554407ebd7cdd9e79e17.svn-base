@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+encoding//WebRoot/assets/js/app.js=UTF-8
+encoding//WebRoot/statement/statement.jsp=UTF-8
+encoding//src/com/shopAfter/controller/AdministratorController.java=UTF-8
+encoding//src/com/shopAfter/controller/ProductController.java=UTF-8
+encoding//src/com/shopAfter/entity/Commodity.java=UTF-8
+encoding//src/com/shopAfter/entity/Goodsinfo.java=UTF-8
+encoding//src/com/shopAfter/entity/Orderinfo.java=UTF-8
+encoding//src/com/shopAfter/entity/TbClass.java=UTF-8

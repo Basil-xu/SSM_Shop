@@ -1,0 +1,135 @@
+package com.shopAfter.controller;
+/**
+ * 商品 控制器
+ */
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONArray;
+import com.shopAfter.dao.product.ProductMapper;
+import com.shopAfter.dao.user.administratorMapper;
+import com.shopAfter.entity.Admin;
+import com.shopAfter.entity.Goodsinfo;
+import com.shopAfter.entity.TbClass;
+
+@Controller
+@RequestMapping("product")
+public class ProductController {
+
+	@Resource
+	ProductMapper dao;
+	/* 查询 */
+	@RequestMapping(value="/list",method=RequestMethod.GET,produces="application/json; charset=utf-8")
+	public String Getlist(Map map,Integer index,String GoodsName){
+		GoodsName=GoodsName==null?"":GoodsName;
+		if(index==null){
+			index=1;
+		}else{
+			index=index;
+		}
+		List<Goodsinfo> list = dao.list((index-1)*5, "%"+GoodsName+"%");
+		for (Goodsinfo goodsinfo : list) {
+			System.out.println(goodsinfo.getGoodsID()+","+goodsinfo.getGoodsName());
+		}
+		int pagecount=dao.pagecount("%"+GoodsName+"%");
+		int pagecounts = pagecount%5==0?pagecount/5:pagecount/5+1;
+		map.put("list", list);
+		map.put("pagecounts",pagecounts);
+		map.put("name", GoodsName);
+		return "Product/Product";
+	}
+	
+	/*删除*/
+	@RequestMapping(value="/del",method=RequestMethod.POST,produces="application/json; charset=utf-8")
+	@ResponseBody
+	public String Getlist(String id){
+		int i = dao.del(id);
+		return JSONArray.toJSONString(i);
+	}
+	
+	/*批量删除*/
+	@RequestMapping(value="/delAll",method=RequestMethod.POST,produces="application/json; charset=utf-8")
+	@ResponseBody
+	public String delAll(String str){
+		List<String> list = new ArrayList<String>();
+		for (String i : str.split(",")) {
+			if (i !=null && i != "") {
+				list.add(i);
+			}
+		}
+		int i = dao.delAll(list);
+		return JSONArray.toJSONString(i);
+	}
+	
+	/*修改*/
+	@RequestMapping(value="/update",method=RequestMethod.POST,produces="application/json; charset=utf-8")
+	@ResponseBody
+	public Object GetUpdate(Goodsinfo  goodsinfo){
+		int i = dao.update1(goodsinfo);
+		return JSONArray.toJSONString(i);
+	}
+	
+	
+	
+	
+	
+	
+	/*类别列表*/
+	@RequestMapping(value="/Typelist",method=RequestMethod.GET,produces="application/json; charset=utf-8")
+	public String GetlistTtype(Map map,Integer index,String s1,String s2){
+		s1=s1==null?"":s1;
+		s2=s2==null?"":s2;
+		if(s1.equals("--请选择--")){
+			s1 = "";
+		}
+		if(s2.equals("--请选择--")){
+			s2 = "";
+		}
+		if(index==null){
+			index=1;
+		}else{
+			index=index;
+		}
+		List<Goodsinfo> lists = dao.typelist((index-1)*5,s1,s2);
+		for (Goodsinfo goodsinfo : lists) {
+			System.out.println(goodsinfo.getClassID1());
+		}
+		int pagecount=dao.pagecountType(s1, s2);
+		int pagecounts = pagecount%5==0?pagecount/5:pagecount/5+1;
+		map.put("lists", lists);
+		map.put("pagecounts",pagecounts);
+		map.put("s1", s1);
+		map.put("s2", s2);
+		return "Product/ProductType";
+	}
+	/*二级联动*/
+	@RequestMapping(value="/Typelists",method=RequestMethod.POST,produces="application/json; charset=utf-8")
+	@ResponseBody
+	public Object GetlistTtype2(String commodityId){
+		List<TbClass> lists = dao.list2(commodityId);
+		for (TbClass tbClass : lists) {
+			System.out.println(tbClass.getClassID());
+		}
+		return JSONArray.toJSONString(lists);
+	}
+	
+	/*删除*/
+	@RequestMapping(value="/dels",method=RequestMethod.POST,produces="application/json; charset=utf-8")
+	@ResponseBody
+	public String GetDels(String id){
+		int i = dao.del(id);
+		return JSONArray.toJSONString(i);
+	}
+	
+	
+}

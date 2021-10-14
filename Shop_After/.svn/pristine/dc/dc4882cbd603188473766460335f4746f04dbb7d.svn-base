@@ -1,0 +1,22 @@
+package com.shopAfter.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.shopAfter.dao.statement.statementMapper;
+
+@Controller
+@RequestMapping("statement")
+public class StatementConntroller {
+	@Resource
+	statementMapper  dao;
+	
+	public Object getStatement(){
+		List<Object> list =   dao.StatementList();
+		return 1;
+	}
+}

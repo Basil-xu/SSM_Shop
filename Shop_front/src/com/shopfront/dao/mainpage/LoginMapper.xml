@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shopfront.dao.mainpage.LoginMapper">
+	<select id="logincount" resultType="int">
+		select count(MemberID) from tb_member where Phonecode=#{Phonecode} and Password=#{Password}
+	</select>
+	<select id="loginname" resultType="Member">
+		select username,MemberID from tb_member where Phonecode=#{Phonecode} and Password=#{Password}
+	</select>
+	<insert id="register">
+		insert into tb_member(Phonecode,username,Password,Emails) values(#{Phonecode},#{username},#{Password},#{Emails}) 
+	</insert>
+	<select id="EnrollID" resultType="Member">
+		select username,MemberID from tb_member where Phonecode=#{Phonecode} and Password=#{Password}
+	</select>
+</mapper>

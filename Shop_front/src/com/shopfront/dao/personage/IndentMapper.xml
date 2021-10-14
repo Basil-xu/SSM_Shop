@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shopfront.dao.personage.IndentMapper">
+	<resultMap type="Orderinfo" id="mapList">
+		<result column="MemberID" property="MemberID"/>
+		<result column="OrderID" property="OrderID"/>
+		<result column="ImageID" property="imageID"/>
+		<result column="ImageUrl" property="imageURL"/>
+		<result column="Num" property="Num"/>
+		<result column="TotalPrice" property="TotalPrice"/>
+		<result column="IsPayment" property="IsPayment"/>
+		<result column="IsPigeonhole" property="IsPigeonhole"/>
+		<result column="Isconfirm" property="Isconfirm"/>
+		<result column="Evaluation" property="Evaluation"/>
+		<result column="GoodsName" property="GoodsName"/>
+	</resultMap>
+	<select id="list" resultMap="mapList">
+		SELECT a.MemberID ImageID,a.OrderID OrderID,c.ImageID ImageID,c.ImageUrl ImageUrl,a.GoodsFee GoodsFee,a.Num Num,a.TotalPrice TotalPrice,a.IsPayment IsPayment,a.IsPigeonhole IsPigeonhole,a.Isconfirm Isconfirm,a.Evaluation Evaluation,b.GoodsName GoodsName
+		FROM tb_orderinfo a 
+		INNER JOIN tb_goodsinfo b ON a.GoodsID = b.GoodsID 
+		INNER JOIN tb_image c ON b.ImageID = c.ImageID
+		where a.MemberID=#{MemberID} 
+		<if test="numsel==1">
+			and a.IsPayment=0
+		</if>
+		<if test="numsel==2">
+			and a.IsPigeonhole=0 and a.IsPayment=1
+		</if>
+		<if test="numsel==3">
+			and a.IsPigeonhole=1 and a.Isconfirm=0
+		</if>
+		<if test="numsel==4">
+			and a.Isconfirm=1 and a.Evaluation=0
+		</if>
+		<if test="numsel==5">
+			and a.Isconfirm=1 and a.Evaluation=1
+		</if>
+		<if test="OrderID!=null and OrderID!=''">
+			and a.OrderID = #{OrderID}
+		</if>
+		limit #{index},5
+	</select>
+	<select id="page" resultType="int">
+		SELECT count(MemberID) FROM tb_orderinfo where MemberID = #{MemberID} 
+		<if test="numsel==1">
+			and IsPayment=0
+		</if>
+		<if test="numsel==2">
+			and IsPigeonhole=0 and IsPayment=1
+		</if>
+		<if test="numsel==3">
+			and IsPigeonhole=1 and Isconfirm=false
+		</if>
+		<if test="numsel==4">
+			and Isconfirm=1 and Evaluation=0
+		</if>
+		<if test="numsel==5">
+			and Isconfirm=1 and Evaluation=1
+		</if>
+		<if test="OrderID!=null and OrderID!=''">
+			and OrderID = #{OrderID}
+		</if>
+		GROUP BY MemberID
+	</select>
+	
+	<update id="stupdate">
+		UPDATE tb_orderinfo set Isconfirm = #{Isconfirm} where OrderID = #{OrderID}
+	</update>
+	
+</mapper>

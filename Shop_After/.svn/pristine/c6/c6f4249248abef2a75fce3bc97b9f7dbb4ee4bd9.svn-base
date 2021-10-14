@@ -1,0 +1,30 @@
+package producttext;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.shopAfter.dao.statement.statementMapper;
+import com.shopAfter.dao.user.userMapper;
+import com.shopAfter.entity.Member;
+import com.shopAfter.entity.Statement;
+
+public class textstatement {
+
+	
+	@Test
+	public void getlist() throws IOException{
+		System.out.println("========================");
+		System.out.println("========================");
+		System.out.println("========================");
+		ApplicationContext context = new ClassPathXmlApplicationContext("SpringMybatisConfig.xml");
+		statementMapper app = context.getBean(statementMapper.class);
+		/*List<Statement> list = app.StatementList();*/
+		Map map  = app.StatementList();
+		
+	}
+}

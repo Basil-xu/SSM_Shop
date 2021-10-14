@@ -1,0 +1,39 @@
+	#cxzbnczn
+			{
+				border: 1px solid red;
+				margin: auto;
+				width: 500px;
+				height: 300px;
+				position: relative;
+				margin: -331px;
+   				margin-left: -558px;
+				
+			}
+			#dsfdsjf
+			{
+				width: 930px;
+  				height: 448px;
+			}
+			#dasdagbhjdajsdjk
+			{
+				position: absolute;
+				background-color: cornflowerblue;
+				width: 20px;
+				height:50px;
+				line-height: 40px;
+				font-size: 20px;
+				top: 80px;
+				left: 5px;
+			}
+			#zxczcz
+			{
+				position: absolute;
+				background-color: cornflowerblue;
+				width: 20px;
+				height:50px;
+				line-height: 40px;
+				font-size: 20px;
+				float: right;
+				top: 80px;
+				right: 5px;
+			}

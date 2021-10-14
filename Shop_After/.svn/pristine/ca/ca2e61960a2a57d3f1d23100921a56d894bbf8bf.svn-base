@@ -1,0 +1,67 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!doctype html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Amaze UI Examples</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+  <link rel="stylesheet" href="/Shop_front/css/login/amazeui.min.css">
+  <link rel="stylesheet" href="/Shop_front/css/login/app.css">
+<script type="text/javascript" src="js/jquery.js"></script></head>
+<body>
+<div class="am-g myapp-login">
+	<div class="myapp-login-bg">
+		  <div data-am-widget="tabs">
+	      <ul class="am-tabs-nav am-cf">
+	          <li class=""><a href="/Shop_front/login.jsp">用户登录</a></li>
+	          <li class="am-active"><a href="[data-tab-panel-0]">管理员登入</a></li>
+	      </ul>
+	      <div class="am-tabs-bd">
+	          <div class="am-tab-panel am-active">
+					<fieldset>
+	            <form action="/Shop_After/getaftlogin" method="post" class="am-form">
+						<div class="am-form-group">
+						<label for="doc-vld-name">用户名</label>
+						<input name="username" type="text" id="doc-vld-name" minlength="3" placeholder="请输入用户名" class="am-form-field" required/>
+						</div>
+						<div class="am-form-group">
+						<label for="doc-vld-name">密码</label>
+						<input name="password" type="password" id="doc-vld-name" minlength="3" placeholder="请输入密码" class="am-form-field" required/>
+						</div>
+						<button class="myapp-login-button am-btn am-btn-secondary" type="submit">登录</button>
+	            </form>
+					</fieldset>
+	          </div>
+	        
+	      </div>
+	  </div>
+	</div>
+</div>
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="/Shop_front/js/login/jquery.min.js"></script>
+<!--<![endif]-->
+<!--[if lte IE 8 ]>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="assets/js/amazeui.ie8polyfill.min.js"></script>
+<![endif]-->
+<script src="/Shop_front/js/login/amazeui.min.js"></script>
+<script src="/Shop_front/js/login/app.js"></script>
+</body>
+<script type="text/javascript">
+	$("#register").click(function(){
+		window.location="/Shop_front/Enroll.jsp";
+	})
+</script>
+</html>

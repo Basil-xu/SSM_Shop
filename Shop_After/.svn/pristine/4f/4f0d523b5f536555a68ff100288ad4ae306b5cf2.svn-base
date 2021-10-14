@@ -1,0 +1,330 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <base href="<%=basePath%>">
+    
+    <title>My JSP 'statement.jsp' starting page</title>
+    
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+	
+	<script type="text/javascript" src="/Shop_After/assets/jss/highcharts.js"></script>
+	         <script src="https://cdn.highcharts.com.cn/highcharts/modules/exporting.js"></script>
+	         <script src="https://cdn.highcharts.com.cn/highcharts/modules/sunburst.js"></script>
+	<!--导出需要引用的文件-->
+	<script type="text/javascript" src="/Shop_After/assets/jss/Exporting.js"></script>
+  </head>
+  <body>
+  <jsp:include page="../Top.jsp"></jsp:include>
+  		<div class="admin-biaogelist">
+	
+    <div class="listbiaoti am-cf">
+      <ul class="am-icon-flag on"> 栏目名称</ul>
+      
+      <dl class="am-icon-home" style="float: right;"> 当前位置： 首页 > <span href="#">报表</span></dl>
+      
+      <dl>
+  <!--       <button type="button" class="am-btn am-btn-danger am-round am-btn-xs am-icon-plus"> 添加产品</button> -->
+      </dl>
+      
+    </div>
+    
+	
+	<div class="am-btn-toolbars am-btn-toolbar am-kg am-cf">
+  <ul>
+    <li>
+      <div class="am-btn-group am-btn-group-xs">
+      
+      </div>
+    </li>
+    <li>
+      <div class="am-btn-group am-btn-group-xs">
+  
+      </div>
+    </li>
+  
+      <div class="am-btn-group am-btn-group-xs">
+    
+      </div>
+    </li>
+    <li>
+    <div class="col-lg-6">
+    <div class="input-group">
+      <%-- <input type="text" class="form-control" id="ReceiverName" value="${name }" placeholder="关键词搜索.."> --%>
+      <span class="input-group-btn">
+      <!--   <button class="btn btn-default" type="button" onclick="seart($)">搜索</button> -->
+      </span>
+    </div>
+    </li>
+  </ul>
+</div>
+ <form class="am-form am-g">
+ 	
+<!--  	<div id="container1" style="width:500px;height:400px;"></div> -->
+ 	<div id="container" style="min-width:400px;height:400px;"></div>
+ 	<input type="button" id="excelRead" value="导出">
+ </form>
+   <jsp:include page="../Bottom.jsp"></jsp:include>
+  </body>
+  
+  <script type="text/javascript">
+ 	 Pageload();
+ 	 
+ 	 
+ 	 
+  	function Pageload(){
+  		var str = [];
+  		var num = [];
+  		$.ajax({
+  			url:'/Shop_After/statement/GetStatement',
+  			type:'get',
+  			data:{},
+  			success:function(data){
+  				$(data).each(function(i,item){
+  					str.push([item.name,item.num]);
+  					num.push(item.num);
+  				});//循环data
+  				console.log(str);
+  				//饼图
+  				  var chart = Highcharts.chart('container', {
+				    chart: {
+				        spacing : [40, 0 , 40, 0]
+				    },
+				    title: {
+				        floating:true,
+				        text: '商品种类购买比例'
+				    },
+				    tooltip: {
+				        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				    },
+				    plotOptions: {
+				        pie: {
+				            allowPointSelect: true,
+				            cursor: 'pointer',
+				            dataLabels: {
+				                enabled: true,
+				                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+				                style: {
+				                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+				                }
+				            },
+				            point: {
+				                events: {
+				              
+				                    mouseOver: function(e) {  // 鼠标滑过时动态更新标题
+				                        // 标题更新函数，API 地址：https://api.hcharts.cn/highcharts#Chart.setTitle
+				                        chart.setTitle({
+				                            text: '销售'+ '\t'+ e.target.y + ' 件'
+				                        });
+				                    }
+				                    //, 
+				                    // click: function(e) { // 同样的可以在点击事件里处理
+				                    //     chart.setTitle({
+				                    //         text: e.point.name+ '\t'+ e.point.y + ' %'
+				                    //     });
+				                    // }
+				                }
+				            },
+				        }
+				    },
+				    series: [{
+				        type: 'pie',
+				        innerSize: '80%',
+				        name: '市场份额',
+				        data: str
+				          /*   {name:'数码产品',   y: 20},
+				            ['电子产品',       20],
+				            {
+				                name: '化妆品',
+				                y: 100,
+				                sliced: true,
+				                selected: true,
+				            },
+				            ['洗漱用品',    20],
+				            ['学习用品',    10],
+				            ['生活用品',    10], */
+				    }]
+				}, function(c) { // 图表初始化完毕后的会掉函数
+				    // 环形图圆心
+				    var centerY = c.series[0].center[1],
+				        titleHeight = parseInt(c.title.styles.fontSize);
+				    // 动态设置标题位置
+				    c.setTitle({
+				        y:centerY + titleHeight/2
+				    });
+				}); //结束饼图
+  			}//回调函数
+  		});//ajax
+  	
+  	}
+        		
+  
+  		/* $.ajax({
+  			url:'/Shop_After/statement/GetStatement',
+  			type:'get',
+  			data:{},
+  			success:function(data){
+  				num = data;
+  				$(data).each(function(i,item){
+  					str.push(item.name,item.num);
+  					num.push(item.num);
+  				console.log(str);
+  					
+  			}); */
+  			
+/*   饼图 */
+  /*  var chart = Highcharts.chart('container', {
+    chart: {
+        spacing : [40, 0 , 40, 0]
+    },
+    title: {
+        floating:true,
+        text: '商品种类购买比例'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            },
+            point: {
+                events: {
+              
+                    mouseOver: function(e) {  // 鼠标滑过时动态更新标题
+                        // 标题更新函数，API 地址：https://api.hcharts.cn/highcharts#Chart.setTitle
+                        chart.setTitle({
+                            text: '销售'+ '\t'+ e.target.y + ' 件'
+                        });
+                    }
+                    //, 
+                    // click: function(e) { // 同样的可以在点击事件里处理
+                    //     chart.setTitle({
+                    //         text: e.point.name+ '\t'+ e.point.y + ' %'
+                    //     });
+                    // }
+                }
+            },
+        }
+    },
+    series: [{
+        type: 'pie',
+        innerSize: '80%',
+        name: '市场份额',
+        data: [
+            {name:'数码产品',   y: 20},
+            ['电子产品',       20],
+            {
+                name: '化妆品',
+                y: 100,
+                sliced: true,
+                selected: true,
+            },
+            ['洗漱用品',    20],
+            ['学习用品',    10],
+            ['生活用品',    10],
+        ]
+    }]
+}, function(c) { // 图表初始化完毕后的会掉函数
+    // 环形图圆心
+    var centerY = c.series[0].center[1],
+        titleHeight = parseInt(c.title.styles.fontSize);
+    // 动态设置标题位置
+    c.setTitle({
+        y:centerY + titleHeight/2
+    });
+}); */
+  
+ 
+
+
+$("#excelRead").click(function(){
+ 	 //声明list  
+		/* var _list = [];
+		_list[0] = "类型";
+		_list[1] = "销量"; */
+ 	 	$.ajax({
+  			url:'/Shop_After/statement/readEx',
+  			type:'get',
+  			dataType: "json",
+  			data:{},
+			contentType:"application/json",
+  			success:function(data){
+  				alert(data);
+  			}
+ 	 })
+ 	});
+  
+  
+  
+  
+  /*  function name(){
+  		Highcharts.chart('container1', {
+		    chart: {
+		        type: 'column'
+		    },
+		    title: {
+		        text: '报表'
+		    },
+		    subtitle: {
+		        text: '小标题'
+		    },
+		    xAxis: {//x轴数据
+		        categories: ['Jan','Feb','Mar','Apr','May'],
+		        crosshair: true
+		    },
+		    yAxis: {
+		        min: 0,
+		        title: {
+		            text: ''
+		        }
+		    },
+		    tooltip: {//根据series的数量动态添加的提示信息
+		        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+		        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+		            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+		        footerFormat: '</table>',
+		        shared: true,
+		        useHTML: true
+		    },
+		    plotOptions: {
+		        column: {
+		            pointPadding: 0.2,
+		            borderWidth: 0
+		        }
+		    },
+		     series: [{//Y轴数据
+		        name: 'A',
+		        data: [100, 71.5, 106.4, 129.2, 144.0]
+		    },{
+		        name:'B',
+		        data:[120, 70, 50, 20, 220]
+		    }]
+		});
+		
+		
+		Highcharts.setOptions({
+		    lang: {
+		        thousandsSep: ','
+		    }
+		});
+		} */
+  </script>
+</html>

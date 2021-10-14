@@ -1,0 +1,9 @@
+package com.shopAfter.dao.statement;
+
+import java.util.List;
+
+public interface statementMapper {
+
+	public List<Object> StatementList();
+	
+}

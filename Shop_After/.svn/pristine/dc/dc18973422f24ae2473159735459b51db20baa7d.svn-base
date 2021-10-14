@@ -1,0 +1,288 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+  <!doctype html>
+<head>
+	<title>Amaze UI Admin index Examples</title>
+
+</head>
+<body>
+<jsp:include page="../Top.jsp"></jsp:include>
+<div class="admin-biaogelist">
+	
+    <div class="listbiaoti am-cf">
+      <ul class="am-icon-flag on"> 栏目名称</ul>
+      
+      <dl class="am-icon-home" style="float: right;"> 当前位置： 首页 > <sapn>商品列表</sapn>></dl>
+      
+      <dl>
+  <!--       <button type="button" class="am-btn am-btn-danger am-round am-btn-xs am-icon-plus"> 添加产品</button> -->
+      </dl>
+      
+      
+    </div>
+	
+	<div class="am-btn-toolbars am-btn-toolbar am-kg am-cf">
+  <ul>
+    <li>
+      <div class="am-btn-group am-btn-group-xs">
+      
+      </div>
+    </li>
+    <li>
+      <div class="am-btn-group am-btn-group-xs">
+  
+      </div>
+    </li>
+  
+      <div class="am-btn-group am-btn-group-xs">
+    
+      </div>
+    </li>
+    <li>
+    <div class="col-lg-6">
+    <div class="input-group">
+      <input type="text" id = "name" class="form-control" placeholder="关键词搜索..">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" onclick="seart()">搜索</button>
+      </span>
+    </div>
+    
+    </li>
+  </ul>
+</div>
+
+
+    <form class="am-form am-g">
+          <table width="100%" class="am-table am-table-bordered am-table-radius am-table-striped">
+            <thead>
+              <tr class="am-success">
+                <th class="table-check"><input type="checkbox"  id="all" onclick="checkAll()"/></th>
+                <th class="table-id">ID</th>
+               <th width="163px" class="table-set">商品图片</th>
+                <th class="table-set" width="163px">名称</th>
+                <th width="163px" class="table-set">品牌</th>
+                 <th width="163px" class="table-set">市场价格</th>
+                <th width="163px" class="table-set">会员价</th>
+                <th width="163px" class="table-set">计数单位</th>
+                <th width="163px" class="table-set">是/否热销</th>
+                <th width="163px" class="table-set">重量</th>
+                <th width="163px" class="table-set">是/否特价</th>
+                <th width="163px" class="table-set">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+            <c:forEach items="${list }" var="i">
+              <tr>
+                <td><input type="checkbox" name = "del" value="${i.goodsID }"/></td>
+                <td>${i.goodsID }</td>
+                <td>${i.goodsUrl }</td>
+                <td><input name = "GoodsName" type="text" value = "${i.goodsName }"  style="border: 0px;"/></td>
+                <td><input name = "goodsBrand" type="text" value = "${i.goodsBrand }"  style="border: 0px;"/></td>
+                <td><input name = "marketPrice" type="text" value = "${i.marketPrice }" style="border: 0px;"/></td>
+                <td><input name = "memberPrice" type="text" value = "${i.memberPrice }" style="border: 0px;"/></td>
+                <td><input name = "goodsUnit" type="text" value = "${i.goodsUnit }" style="border: 0px;"/></td>
+                <td>
+					<c:if test="${i.isHot==true }">
+					<input name = "isHot" type="text" value = "是" style="border: 0px;"/>
+					</c:if>
+					<c:if test="${i.isHot==false }">
+					<input name = "isHot" type="text" value = "否" style="border: 0px;"/>
+					</c:if>
+				</td>
+                <td><input name ="goodsWeight"  type="text" value = "${i.goodsWeight }" style="border: 0px;"/></td>
+                <td >
+                	<c:if test="${i.isDiscount==true }">
+                	<input name = "isDiscount" type="text" value = "是" style="border: 0px;"/>
+                	</c:if>
+                	
+                	<c:if test="${i.isDiscount==false }">
+                	<input name="isDiscount" type="text" value = "否"/>
+                	</c:if>
+                </td>
+                <td>
+                      <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" onclick="updat(this,'${i.goodsID}')"><span class="am-icon-pencil-square-o"></span></button>
+                      <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-round" onclick="del('${i.goodsID }')"><span class="am-icon-trash-o"></span></button>
+                </td>
+              </tr>
+              </c:forEach>
+         
+            </tbody>
+          </table>
+          
+                 <div class="am-btn-group am-btn-group-xs">
+              <button type="button" class="am-btn am-btn-default" onclick="add()"><span class="am-icon-plus"></span> 新增</button>
+              <button type="button" class="am-btn am-btn-default" onclick="dels()"><span class="am-icon-trash-o"></span> 批量删除</button>
+            </div>
+          
+         	<ul class="am-pagination am-fr">
+					 	<li ><a href="/Shop_After/product/list?index=1&GoodsName=${username}" onclick="getup('1')">首页</a></li>
+          <c:forEach var="i" begin="1" end="${pagecounts }">
+            	<c:if test="${index==i }">
+            	 <li class="active"><a href="/Shop_After/product/list?index=${i}&GoodsName=${username}" onclick="getup('${i}')">${i }</a></li>
+           		</c:if>
+           		<c:if test="${index!=i }">
+            		 <li><a href="/Shop_After/product/list?index=${i}&GoodsName=${username}" onclick="getup('${i}')">${i}</a></li>
+         	  	</c:if>
+         </c:forEach>
+       		 <li><a href="/Shop_After/product/list?index=${pagecounts}&GoodsName=${username}" onclick="getup('${pagecounts}')">尾页</a></li>
+                
+              </ul>
+          
+          
+      
+          <hr />
+          <p>注：.....</p>
+        </form>
+ 
+ 
+ 
+ 
+
+	<jsp:include page="../Bottom.jsp"></jsp:include>
+<!--[if lt IE 9]>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="assets/js/polyfill/rem.min.js"></script>
+<script src="assets/js/polyfill/respond.min.js"></script>
+<script src="assets/js/amazeui.legacy.js"></script>
+<![endif]--> 
+
+<!--[if (gte IE 9)|!(IE)]><!--> 
+<script src="/Shop_After/assets/js/amazeui.min.js"></script>
+<!--<![endif]-->
+
+
+
+
+
+
+
+</body>
+<script src="/Shop_After/assets/js/jquery.min.js"></script>
+<script src="/Shop_After/assets/js/app.js"></script>
+ 	<script type="text/javascript">
+	/* 查询 */
+	function seart(){
+  		var name = $("#name").val();
+		window.location ="/Shop_After/product/list?index=1&GoodsName="+name;
+  	}
+  	
+  	/* 删除 */
+  	function del(id){
+  		alert(id);
+  		$.ajax({
+  			url:'/Shop_After/product/del',
+  			type:'post',
+  			data:{id:id},
+  			success:function (data){
+				if(data >0){
+					alert("删除ID为"+id+"的商品信息！");
+					window.location ="/Shop_After/product/list?index=1&GoodsName=";
+				}else{
+					alert("删除失败！");
+				}
+  			}
+  		});
+  	}
+  	
+  	/* 全选 */
+	function checkAll(){
+		if($("#all").prop("checked") == true){
+			$("input[name='del']").each(function(i,item){
+				$(item).prop("checked",true);
+			})
+		}else{
+			$("input[name='del']").each(function(i,item){
+				$(item).prop("checked",false);
+			})
+		}
+	}
+		  	
+  	
+  	/* 批量删除 */
+  	function dels(){
+  		var str ="";
+  		$("input[name='del']").each(function(i,item){
+  			if($(item).prop("checked")==true){
+  				str+=$(item).val()+",";
+  			}
+  		})
+
+		$.ajax({
+			url:'/Shop_After/product/delAll',
+			type:'post',
+			data:{str:str},
+			success:function(data){
+				if(data > 0){
+				alert("成功删除ID为"+str+"的信息");
+					window.location ="/Shop_After/product/list?index=1&GoodsName=";
+				}else{
+					alert("删除失败!");
+				}
+			}
+		});
+  	}
+  	
+  	/* 新增 */
+  	function add(){
+  		window.location ="/Shop_After/Product/ProductAdd.jsp";
+  	}
+  	/* 修改 */
+  	function updat(val,id){
+	/* 获取当前点击行的值 */
+	debugger;
+		var index = val.parentNode.parentNode;
+		rowNum = index.rowIndex-1;
+	
+		var GoodsName = $("input[name='GoodsName']:eq('"+rowNum+"')").val();
+		var goodsBrand = $("input[name='goodsBrand']:eq('"+rowNum+"')").val();
+		var marketPrice = $("input[name='marketPrice']:eq('"+rowNum+"')").val();
+		var memberPrice = $("input[name='memberPrice']:eq('"+rowNum+"')").val();
+		var goodsUnit = $("input[name='goodsUnit']:eq('"+rowNum+"')").val();
+		var isHot = $("input[name='isHot']:eq('"+rowNum+"')").val();
+		if("是"== isHot){
+			isHot = 1;
+		}else{
+			isHot = 0;
+		}
+		var goodsWeight = $("input[name='goodsWeight']:eq('"+rowNum+"')").val();
+		var isDiscount = $("input[name='isDiscount']:eq('"+rowNum+"')").val();
+		if("是"==isDiscount){
+			isDiscount = 1;
+		}else{
+			isDiscount = 0;
+		}
+		
+		$.ajax({
+			url:'/Shop_After/product/update',
+			type:'post',
+			data:{
+				GoodsID:id,
+				GoodsName:GoodsName,
+				goodsBrand:goodsBrand,
+				marketPrice:marketPrice,
+				memberPrice:memberPrice,
+				goodsUnit:goodsUnit,
+				isHots:isHot,
+				goodsWeight:goodsWeight,
+				isDiscounts:isDiscount
+			},
+			success:function (data){
+				if(data>0){
+					alert("修改成功！");
+				}else{
+					alert("修改失败！");
+				}
+			}
+			
+		});
+		 
+	}
+  	 	
+	</script> 
+</html>

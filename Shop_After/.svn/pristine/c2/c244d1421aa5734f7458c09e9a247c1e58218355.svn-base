@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shopAfter.dao.statement.statementMapper">
+    
+<select id = "StatementList" resultType="Statement">
+	select c.CommodityName as name,COUNT(c.CommodityName) as num from tb_orderinfo a inner join tb_goodsinfo b on a.GoodsID = b.GoodsID inner join tb_class c on b.ClassID1 = c.ClassID group by c.CommodityName
+</select>
+
+ </mapper>

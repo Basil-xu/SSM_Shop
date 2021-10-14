@@ -1,0 +1,29 @@
+package com.shopAfter.dao.product;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.shopAfter.entity.Goodsinfo;
+import com.shopAfter.entity.Orderinfo;
+import com.shopAfter.entity.TbClass;
+
+public interface ProductMapper {
+
+	public List<Goodsinfo> list(@Param("index")int index,@Param("GoodsName")String GoodsName);
+
+	public int pagecount(@Param("GoodsName")String GoodsName);
+	
+	public int del(@Param("id")String id);
+	
+	public int delAll(List<String> list);
+	
+	public int update1(Goodsinfo goodsinfo);
+	
+	public List<Goodsinfo> typelist(@Param("index")int index,@Param("s1")String s1,@Param("s2")String s2);
+	
+	public int pagecountType(@Param("s1")String s1,@Param("s2")String s2);
+	
+	public List<TbClass> list2(@Param("CommodityId")String CommodityId); 
+	
+}

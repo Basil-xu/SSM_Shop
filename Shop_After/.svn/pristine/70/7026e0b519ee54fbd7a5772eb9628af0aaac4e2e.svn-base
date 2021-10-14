@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shopAfter.dao.user.administratorMapper">
+<!-- 分页查询 -->
+	<select id="list" resultType="Admin">
+		select * from tb_admin where username like #{username} limit #{index},5
+	</select>
+<!-- 查询总数量  -->
+	<select id="pagecount" resultType="int">
+		select count(adminid) from tb_admin where username like #{username}
+	</select>
+	
+	<!-- 删除 -->
+<delete id="del" >
+    delete from tb_admin where adminid=#{adminid}
+</delete>
+<delete id="dels" >
+    delete from tb_admin where adminid in 
+    <foreach collection="list" open="(" close=")" item="i" separator=",">
+		${i} 
+    </foreach>
+</delete>
+<!-- 添加 -->
+<insert id="insert" >
+	insert into tb_admin (username,password)value(#{username},#{password})
+</insert>
+
+<!-- 修改  -->
+<update id="update1">
+	update tb_admin
+			<trim prefix="set" prefixOverrides=",">
+				<if test="username!= '' and username!=null">
+					 username=#{username}
+		     	</if>
+		     	<if test="password!='' and password!=null">
+		     		,password=#{password}
+		     	</if>
+		    
+			</trim>
+	 where adminid=#{adminid}
+</update>
+</mapper>

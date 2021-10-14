@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shopAfter.dao.product.ProductMapper">
+
+<!-- 查询 -->
+<select id="list" resultType="Goodsinfo" >
+	select * from tb_goodsinfo where GoodsName like #{GoodsName} limit #{index},5
+</select>
+<!-- 查询总数量 -->
+<select id="pagecount" resultType="int">
+	select count(GoodsID) from  tb_goodsinfo where GoodsName like #{GoodsName} 
+</select>
+<!-- 删除 -->
+<delete id="del">
+	delete from tb_goodsinfo where GoodsID = #{id}
+</delete>
+<!-- 删除 image表 -->
+<delete id="delImage">
+	delete from tb_image where GoodsID = #{id}
+</delete>
+<!-- 批量删除 -->
+<delete id="delAll">
+	delete from tb_goodsinfo where GoodsID in 
+	<foreach collection="list" item="i" separator="," open="(" close=")">
+		${i}
+	</foreach>
+</delete>
+<!-- 批量删除 image表 -->
+<delete id="delAllImage">
+	delete from tb_image where GoodsID in 
+	<foreach collection="list" item="i" separator="," open="(" close=")">
+		${i}
+	</foreach>
+</delete>
+<update id="update1">
+	update tb_goodsinfo
+			<trim prefix="set" prefixOverrides=",">
+				<if test="GoodsName!= '' and GoodsName!=null">
+					 GoodsName=#{GoodsName}
+		     	</if>
+		     	<if test="GoodsBrand!='' and GoodsBrand!=null">
+		     		,GoodsBrand=#{GoodsBrand}
+		     	</if>
+		  	  <if test="MarketPrice!='' and MarketPrice!=null">
+		     		,MarketPrice=#{MarketPrice}
+		     	</if>
+		     	<if test="MemberPrice!='' and MemberPrice!=null">
+		     		,MemberPrice=#{MemberPrice}
+		     	</if>
+		     	<if test="GoodsUnit!='' and GoodsUnit!=null">
+		     		,GoodsUnit=#{GoodsUnit}
+		     	</if>
+		     	<if test="IsHots!=null">
+		     		,IsHot=#{IsHots}
+		     	</if>
+		     	<if test="IsDiscounts!=null">
+		     		,IsDiscount=#{IsDiscounts}
+		     	</if>
+		     	<if test="GoodsWeight!='' and GoodsWeight!=null">
+		     		,GoodsWeight=#{GoodsWeight}
+		     	</if>
+		     	<if test="ClassID1!= 0 and ClassID1!=null">
+		     		,ClassID1=#{ClassID1}
+		     	</if>
+		     	<if test="ClassID2!= 0 and ClassID2!=null">
+		     		,ClassID2=#{ClassID2}
+		     	</if>
+			</trim>
+	 where GoodsID=#{GoodsID}
+</update>
+
+<!-- 商品类型 -->
+
+
+<select id = "typelist" resultType="Goodsinfo">
+	select a.*,b.CommodityName type1,c.CommodityName type2 from tb_goodsinfo a INNER JOIN tb_class b on a.ClassID1 = b.ClassID 
+	INNER JOIN tb_class c on a.ClassID2 = c.ClassID
+	<if test="s1!=null and s1!= '' and s2!=null and s2!=''">
+		where a.ClassID1 = #{s1} and a.ClassID2=#{s2}
+	</if>
+	<if test="s1==null and s1== '' and s2==null and s2==''">
+		
+	</if>
+	  limit #{index},5
+
+
+</select>
+<!-- 查询总数量 -->
+<select id="pagecountType" resultType="int">
+	 select count(GoodsID) from tb_goodsinfo 
+	<if test="s1!=null and s1!= '' and s2!=null and s2!=''">
+		where ClassID1 = #{s1} and ClassID2=#{s2}
+	</if>
+	<if test="s1==null and s1== '' and s2==null and s2==''">
+		
+	</if>
+</select>
+<select id="list2" resultType="TbClass">
+	select * from tb_class where CommodityId = #{CommodityId};
+</select>
+<insert id="add">
+	insert into tb_goodsinfo(GoodsName,ClassID1,ClassID2,GoodsIntroduce,GoodsBrand,GoodsUnit,GoodsWeight,GoodsUrl,MarketPrice,MemberPrice,Isrefinement,IsHot,AddDate,IsDiscount)
+	values(#{GoodsName},#{ClassID1},#{ClassID2},#{GoodsIntroduce},#{GoodsBrand},#{GoodsUnit},#{GoodsWeight},#{GoodsUrl},#{MarketPrice},#{MemberPrice},#{Isrefinement},#{IsHot},#{AddDate},#{IsDiscount})
+</insert>
+<insert id = "imgAdd"> 
+	insert into tb_image(imageName,ImageUrl,GoodsID)value(#{ImageName},#{ImageUrl},#{GoodsID})
+</insert>
+
+<!-- 查询 image表 -->
+<select id="listImage" resultType="Image">
+	select * from tb_image where GoodsID=#{GoodsID}
+</select>
+<!-- 修改时删除 image表 -->
+<select id="listImagedel" resultType="Image">
+	select * from tb_image where ImageID=#{ImageID}
+</select>
+<!-- 删除图片表  -->
+<delete id="delImageID">
+	delete from tb_image where ImageID = #{ImageID}
+</delete>
+<!-- 查询img数量 -->
+<select id="listImagepage" resultType="int">
+	select count(ImageID) from tb_image where GoodsID=#{GoodsID}
+</select>
+<!-- 修改 img  -->
+<update id="updateImg">
+	update tb_image set ImageName=#{ImageName} where ImageID=#{ImageID}
+</update>
+</mapper>

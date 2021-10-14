@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shopfront.dao.personage.UserMapper">
+	<resultMap type="Member" id="maplist">
+		<result column="obligation" property="obligation"/>
+		<result column="pending" property="pending"/>
+		<result column="toreceive" property="toReceive"/>
+	</resultMap>
+	<select id="list" resultMap="maplist">
+		select *,
+		(SELECT COUNT(OrderID) FROM tb_orderinfo WHERE IsPayment = 0 and MemberID=#{id}) obligation ,
+		(SELECT COUNT(OrderID) FROM tb_orderinfo WHERE IsPigeonhole = 0 and MemberID=#{id}) pending,
+		(SELECT COUNT(OrderID) FROM tb_orderinfo WHERE IsPigeonhole = 1 and MemberID=#{id}) toreceive
+		from tb_member where MemberID =#{id}
+	</select>
+</mapper>

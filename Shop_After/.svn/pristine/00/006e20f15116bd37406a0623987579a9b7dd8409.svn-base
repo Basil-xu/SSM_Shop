@@ -1,0 +1,16 @@
+package com.shopAfter.dao.statement;
+
+import java.util.List;
+import java.util.Map;
+
+import com.shopAfter.entity.Statement;
+
+public interface statementMapper {
+
+	public List StatementList();
+	
+/*	public Map<Statement> StatementList();*/
+
+	/*public Map StatementList();*/
+
+}

@@ -1,0 +1,25 @@
+package com.shopAfter.dao.user;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.shopAfter.entity.Admin;
+import com.shopAfter.entity.Member;
+
+public interface administratorMapper {
+
+	public List<Admin> list(@Param("index")int index,@Param("username")String username); 
+	
+	public int pagecount(@Param("username")String username);
+	
+	public int del(@Param("adminid")int adminid);
+	
+	public int dels(List<Integer> list);
+	
+	public int insert(Admin admin);
+	
+	public int update1(Admin admin);
+	
+	
+}
